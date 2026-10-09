@@ -9,3 +9,4 @@ server
 # Gömülü yazılım derleme çıktıları
 build/
 bin/
+client
