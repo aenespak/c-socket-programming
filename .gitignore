@@ -1,0 +1,11 @@
+# Derlenmis ikili (binary) dosyalar
+*.o
+*.out
+*.elf
+*.hex
+create
+server
+
+# Gömülü yazılım derleme çıktıları
+build/
+bin/
