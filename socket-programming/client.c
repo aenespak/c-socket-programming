@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include "telemetry.h"
 
 #define PORT 8080
 
@@ -10,7 +11,15 @@ int main(){
     int sockfd;
     struct sockaddr_in server_address;
 
-    char *msg = "Hello from secure pc.";
+    TelemetriPaketi paket;
+    paket.paket_id = 1;
+    paket.rakim = 3500.5f;
+    paket.hiz = 210.0f;
+    paket.pitch = 5;
+    paket.roll = -2;
+    paket.batarya = 85;
+    paket.sistem_durumu = 1;
+
 
     char buffer[1024] = {0};
 

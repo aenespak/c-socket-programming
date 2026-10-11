@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include "telemetry.h"
 
 #define PORT 8080
 
