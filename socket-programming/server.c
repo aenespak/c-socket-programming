@@ -45,12 +45,17 @@ int main() {
 
     printf("connection successful\n");
 
-    char buffer[1024] = {0};
-    ssize_t bytes_read = read(new_socket, buffer, sizeof(buffer)-1);
+    TelemetriPaketi gelen_paket;
+    ssize_t bytes_read = read(new_socket, &gelen_paket, sizeof(gelen_paket));
     if(bytes_read > 0){
-        buffer[bytes_read] = '\0';
-        printf("message received from client: %s\n", buffer);
+        printf("--- TELEMETRİ ALINDI ---\n");
+        printf("Client IP: %s\n", inet_ntoa(client_address.sin_addr));
+        printf("Paket ID: %u\n", gelen_paket.paket_id);
+        printf("İrtifa  : %.2f m\n", gelen_paket.rakim);
+        printf("Hız     : %.2f km/s\n", gelen_paket.hiz);
+        printf("Batarya : %%%u\n", gelen_paket.batarya);
     }
+
     char *msg = "Your message has been received. Thank you";
     send(new_socket, msg, strlen(msg), 0);
     printf("message sent\n");

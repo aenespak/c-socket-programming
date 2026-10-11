@@ -42,7 +42,7 @@ int main(){
         return -1;
     }
 
-    send(sockfd, msg, strlen(msg), 0);
+    send(sockfd, &paket, sizeof(paket), 0);
     printf("message sent\n");
 
     read(sockfd, buffer, 1024);
