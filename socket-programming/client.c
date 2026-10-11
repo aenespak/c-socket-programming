@@ -9,7 +9,7 @@
 int main(){
     int sockfd;
     struct sockaddr_in server_address;
-    char *msg = "Hello from client.";
+    char *msg = "Hello from secure pc.";
     char buffer[1024] = {0};
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
