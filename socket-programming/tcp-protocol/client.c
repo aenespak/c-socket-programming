@@ -21,7 +21,6 @@ int main(){
     paket.sistem_durumu = 1;
 
 
-    char buffer[1024] = {0};
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if(sockfd < 0 ){
