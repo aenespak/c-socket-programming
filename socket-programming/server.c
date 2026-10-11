@@ -46,19 +46,26 @@ int main() {
     printf("connection successful\n");
 
     TelemetriPaketi gelen_paket;
-    ssize_t bytes_read = read(new_socket, &gelen_paket, sizeof(gelen_paket));
-    if(bytes_read > 0){
-        printf("--- TELEMETRİ ALINDI ---\n");
-        printf("Client IP: %s\n", inet_ntoa(client_address.sin_addr));
-        printf("Paket ID: %u\n", gelen_paket.paket_id);
-        printf("İrtifa  : %.2f m\n", gelen_paket.rakim);
-        printf("Hız     : %.2f km/s\n", gelen_paket.hiz);
-        printf("Batarya : %%%u\n", gelen_paket.batarya);
-    }
-
-    char *msg = "Your message has been received. Thank you";
-    send(new_socket, msg, strlen(msg), 0);
-    printf("message sent\n");
+    while(1){
+        ssize_t bytes_read = read(new_socket, &gelen_paket, sizeof(gelen_paket));
+        if(bytes_read > 0){
+            printf("--- TELEMETRİ ALINDI ---\n");
+            printf("Client IP: %s\n", inet_ntoa(client_address.sin_addr));
+            printf("Paket ID: %u\n", gelen_paket.paket_id);
+            printf("İrtifa  : %.2f m\n", gelen_paket.rakim);
+            printf("Hız     : %.2f km/s\n", gelen_paket.hiz);
+            printf("Batarya : %%%u\n", gelen_paket.batarya);
+        }
+        else if(bytes_read == 0){
+            printf("client disconnected\n");
+            break;
+        }
+        else{
+            perror("read failed");
+            exit(-1);
+        }  
+    }    
+    
     close(new_socket);
     close(server_fd);
     return 0;

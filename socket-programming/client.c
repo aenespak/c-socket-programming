@@ -41,12 +41,19 @@ int main(){
         printf("connection failed");
         return -1;
     }
-
-    send(sockfd, &paket, sizeof(paket), 0);
-    printf("message sent\n");
-
-    read(sockfd, buffer, 1024);
-    printf("message received from server : %s \n", buffer);
+    //buradan sonrasına devam ederse bağlanmış demektir.
+    while(1){
+        send(sockfd, &paket, sizeof(paket), 0);
+        printf("message sent\n");
+        paket.paket_id++;
+        paket.rakim++;
+        paket.hiz += 2.5;
+        paket.batarya -= 0.5;
+        paket.pitch = (paket.pitch + 2) % 180;
+        paket.roll = (paket.roll + 3) % 180;
+        paket.sistem_durumu = 1;
+        usleep(500000);
+    }
 
     close(sockfd);
 
