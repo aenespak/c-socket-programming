@@ -1,8 +1,8 @@
 # C Socket Programming: TCP & UDP Implementations
 
-Bu repo, C dilinde düşük seviyeli (low-level) soket programlama ile geliştirilmiş iki farklı ağ protokolü çalışmasını içerir.
-1. **UDP İHA Telemetri Akışı:** Havacılık ve savunma sanayii standartlarında, bellek dolgusuz (`#pragma pack(1)`) binary telemetri paketi yayını.
-2. **TCP Çift Yönlü Mesajlaşma:** `fork()` ile çoklu süreç (multi-process) mimarisi kullanılarak geliştirilmiş eşzamanlı mesajlaşma uygulaması.
+Bu repo, C dilinde düşük seviyeli soket programlama ile geliştirilmiş iki farklı ağ protokolü çalışmasını içerir.
+1. **UDP Telemetri Akışı:** Havacılık ve savunma sanayii standartlarında, bellek dolgusuz binary telemetri paketi yayını.
+2. **TCP Çift Yönlü Mesajlaşma:** `fork()` ile çoklu süreç mimarisi kullanılarak geliştirilmiş eşzamanlı mesajlaşma uygulaması.
 
 ---
 
