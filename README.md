@@ -1,6 +1,6 @@
 # C Socket Programming: TCP & UDP Implementations
 
-Bu repo, C dilinde düşük seviyeli (low-level) soket programlama ile geliştirilmiş iki farklı ağ protokolü uygulamasını içerir:
+Bu repo, C dilinde düşük seviyeli (low-level) soket programlama ile geliştirilmiş iki farklı ağ protokolü çalışmasını içerir.
 1. **UDP İHA Telemetri Akışı:** Havacılık ve savunma sanayii standartlarında, bellek dolgusuz (`#pragma pack(1)`) binary telemetri paketi yayını.
 2. **TCP Çift Yönlü Mesajlaşma:** `fork()` ile çoklu süreç (multi-process) mimarisi kullanılarak geliştirilmiş eşzamanlı mesajlaşma uygulaması.
 
@@ -73,4 +73,4 @@ Bağlantı tabanlı TCP soket mimarisi üzerine kuruludur.
 
 ### Yerel Bilgisayarın Sunucu Olarak Kullanılamaması
 * **Problem:** Kişisel bilgisayarın doğrudan bir sunucu olarak kullanılamaması ve dış ağdaki istemcilerin bu bilgisayara doğrudan bağlanamaması.
-* **Sebep:** Bilgisayarın yerel ağda özel bir IP (Private IP) alması, modem üzerinde port yönlendirme (Port Forwarding) yapılamaması ve kurumsal ağlardaki CGNAT / güvenlik duvarı engelleri.
+* **Sebep:** Bilgisayarın yerel ağda özel bir IP (Private IP) alması, modem üzerinde port yönlendirme (Port Forwarding) yapılamaması ve kurumsal ağlardaki güvenlik duvarı engelleri.
