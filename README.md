@@ -73,4 +73,4 @@ Bağlantı tabanlı TCP soket mimarisi üzerine kuruludur.
 
 ### Yerel Bilgisayarın Sunucu Olarak Kullanılamaması
 * **Problem:** Kişisel bilgisayarın doğrudan bir sunucu olarak kullanılamaması ve dış ağdaki istemcilerin bu bilgisayara doğrudan bağlanamaması.
-* **Sebep:** Bilgisayarın yerel ağda özel bir IP (Private IP) alması, modem üzerinde port yönlendirme (Port Forwarding) yapılamaması ve kurumsal ağlardaki güvenlik duvarı engelleri.
+* **Sebep:** Bilgisayarın yerel ağda özel bir IP alması, modem üzerinde port yönlendirme yapılamaması ve kurumsal ağlardaki güvenlik duvarı engelleri.
