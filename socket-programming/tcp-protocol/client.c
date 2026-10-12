@@ -1,26 +1,17 @@
+//TCP Protocol Message Application
+
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-#include "telemetry.h"
 
 #define PORT 8080
 
 int main(){
     int sockfd;
     struct sockaddr_in server_address;
-
-    TelemetriPaketi paket;
-    paket.paket_id = 1;
-    paket.rakim = 3500.5f;
-    paket.hiz = 210.0f;
-    paket.pitch = 5;
-    paket.roll = -2;
-    paket.batarya = 85;
-    paket.sistem_durumu = 1;
-
-
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if(sockfd < 0 ){
@@ -41,19 +32,40 @@ int main(){
         return -1;
     }
     //buradan sonrasına devam ederse bağlanmış demektir.
-    while(1){
-        send(sockfd, &paket, sizeof(paket), 0);
-        printf("message sent\n");
-        paket.paket_id++;
-        paket.rakim++;
-        paket.hiz += 2.5;
-        paket.batarya -= 0.5;
-        paket.pitch = (paket.pitch + 2) % 180;
-        paket.roll = (paket.roll + 3) % 180;
-        paket.sistem_durumu = 1;
-        usleep(500000);
+    pid_t pid = fork();
+    if(pid < 0){
+        perror("fork failed");
+        exit(-1);
     }
-
+    if(pid == 0){
+        char msg[1024] = {0};
+        while(1){
+            memset(msg, 0 , sizeof(msg));
+            ssize_t bytes_read = read(sockfd, msg, sizeof(msg));
+            if(bytes_read == 0){
+                printf("server closed the connection\n");
+                break;
+            }
+            msg[bytes_read] = '\0';
+            msg[strcspn(msg, "\r\n")] = '\0';
+            printf("Server: %s\n", msg);
+            if(strncmp(msg, "exit", 4) == 0){
+                break;
+            }
+        }
+    }
+    else{
+        char msg[1024] = {0};
+        while(1){
+            memset(msg, 0, sizeof(msg));
+            fgets(msg, sizeof(msg), stdin);
+            send(sockfd, msg, strlen(msg), 0);
+            if(strncmp(msg, "exit", 4) == 0){
+                break;
+            }
+        }
+        kill(pid, SIGTERM);
+    }
     close(sockfd);
 
     return 0;

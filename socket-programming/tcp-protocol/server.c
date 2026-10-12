@@ -1,9 +1,11 @@
+//TCP Protocol Message Application
+
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-#include "telemetry.h"
 
 #define PORT 8080
 
@@ -33,7 +35,7 @@ int main() {
         exit(-1);
     }
     printf("waiting for connection... PORT: %d\n", PORT);
-
+    //birisi baglandıgında accept ile kabul ediyoruz
     struct sockaddr_in client_address;
     socklen_t client_address_size = sizeof(client_address);
     new_socket = accept(server_fd, (struct sockaddr*)&client_address, &client_address_size);
@@ -44,28 +46,38 @@ int main() {
     }
 
     printf("connection successful\n");
+    pid_t pid = fork();
+    if(pid < 0) exit(0);
+    if(pid == 0){
+        char msg[1024] = {0};
+        while(1){
+            memset(msg, 0, sizeof(msg));
+            ssize_t bytes_read = read(new_socket, msg, sizeof(msg)-1);
+            if(bytes_read == 0){
+                printf("client disconnected\n");
+                break;
+            }
+            msg[bytes_read] = '\0';
+            printf("Client: %s", msg);
+            if(strncmp(msg, "exit", 4) == 0){
+                break;
+            }
+        }
+    }
+    else{
+        char msg[1024] = {0};
+        while(1){
+            memset(msg, 0 , sizeof(msg));
 
-    TelemetriPaketi gelen_paket;
-    while(1){
-        ssize_t bytes_read = read(new_socket, &gelen_paket, sizeof(gelen_paket));
-        if(bytes_read > 0){
-            printf("--- TELEMETRİ ALINDI ---\n");
-            printf("Client IP: %s\n", inet_ntoa(client_address.sin_addr));
-            printf("Paket ID: %u\n", gelen_paket.paket_id);
-            printf("İrtifa  : %.2f m\n", gelen_paket.rakim);
-            printf("Hız     : %.2f km/s\n", gelen_paket.hiz);
-            printf("Batarya : %%%u\n", gelen_paket.batarya);
+            fgets(msg, sizeof(msg), stdin);
+            send(new_socket, msg, strlen(msg), 0);
+            if(strncmp(msg, "exit", 4) == 0){
+                break;
+            }
         }
-        else if(bytes_read == 0){
-            printf("client disconnected\n");
-            break;
-        }
-        else{
-            perror("read failed");
-            exit(-1);
-        }  
-    }    
-    
+        kill(pid, SIGTERM);
+    }
+
     close(new_socket);
     close(server_fd);
     return 0;
