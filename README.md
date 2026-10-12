@@ -21,50 +21,37 @@ socket-programming/
 
 ---
 
-## 🛰️ 1. UDP İHA Telemetri Protokolü
+## 1. UDP Telemetri Protokolü
 
-Havacılık sistemlerinde (ör. Bayraktar TB2 / Akıncı) telemetri verilerinin düşük gecikmeyle (low-latency) aktarımı için UDP tercih edilir.
+Havacılık sistemlerinde telemetri verilerinin düşük gecikmeyle aktarımı için UDP tercih edilir.
 
 * **Sözleşme (`telemetry.h`):**
   * `<stdint.h>` ile platformdan bağımsız sabit boyutlu türler (`uint16_t`, `int16_t`, `uint8_t`).
-  * `#pragma pack(push, 1)` ile derleyici padding (çöp dolgu) kapatılarak net **16 bayt** paket boyutu.
+  * `#pragma pack(push, 1)` ile derleyici padding kapatılarak net **16 bayt** paket boyutu.
   * Uçuş verileri: Paket ID, irtifa, hız, pitch, roll, batarya yüzdesi ve sistem durumu bayrağı.
 * **Mimari:**
-  * İstemci (`client.c`): `connect()` gerekmeksizin `sendto()` ile periyodik (20 Hz) telemetri fırlatır.
+  * İstemci (`client.c`): `connect()` gerekmeksizin `sendto()` ile periyodik telemetri fırlatır.
   * Sunucu (`server.c`): Tek bir UDP soketi üzerinden `recvfrom()` ile gelen paketleri ve gönderen IP/port bilgisini yakalar.
 
-### Derleme ve Çalıştırma
-```bash
-# Terminal 1 (Yer İstasyonu):
-gcc socket-programming/udp-protocol/server.c -o udp_server
-./udp_server
 
-# Terminal 2 (İHA):
-gcc socket-programming/udp-protocol/client.c -o udp_client
-./udp_client
-```
+## 2. TCP Çift Yönlü Mesajlaşma
 
----
-
-## 💬 2. TCP Çift Yönlü Mesajlaşma
-
-Bağlantı tabanlı (connection-oriented) TCP soket mimarisi üzerine kuruludur.
+Bağlantı tabanlı TCP soket mimarisi üzerine kuruludur.
 
 * **Multi-Process Mimari:**
   * `fork()` ile süreç ikiye ayrılır:
     * **Çocuk Süreç:** Soketten gelen verileri `read()` ile dinler.
-    * **Ana Süreç:** Kullanıcı girdisini `fgets()` ile alıp `send()` ile iletir.
-* Güvenli çıkış (`exit`) ve `SIGTERM` sinyali ile süreç temizliği.
+    * **Ana Süreç:** Kullanıcı girdisini `send()` ile iletir.
 
 
-## 🛠️ Teknolojiler ve Standartlar
+## Teknolojiler ve Standartlar
 * **Dil:** C 
 * **Ağ:** IPv4, TCP , UDP 
-* **Sistem:** Linu
+* **Sistem:** Linux
 
 ---
 
-## 🧠 Karşılaşılan Problemler ve Mühendislik Çözümleri
+## Karşılaşılan Problemler 
 
 
 ### 1. Bulut ve Güvenlik Duvarı Engelleri
@@ -82,3 +69,8 @@ Bağlantı tabanlı (connection-oriented) TCP soket mimarisi üzerine kuruludur.
 * **Sebep:** 32-bit ve 64-bit derleyiciler farklı boyutlardaki verilerin arasını gereksiz boşluklarla doldurur. Bu durum önemli verilerin bozulmasına sebep olabilir.
 * **Çözüm:** `<stdint.h>` ile sabit boyutlu tipler (`uint16_t`, `uint8_t`) kullanıldı ve `#pragma pack(push, 1)` ile derleyicinin araya boşluk koyması engellenerek tam 16 baytlık bir paket sağlandı.
 
+## Bilinen Kısıtlar
+
+### Yerel Bilgisayarın Sunucu Olarak Kullanılamaması
+* **Problem:** Kişisel bilgisayarın doğrudan bir sunucu olarak kullanılamaması ve dış ağdaki istemcilerin bu bilgisayara doğrudan bağlanamaması.
+* **Sebep:** Bilgisayarın yerel ağda özel bir IP (Private IP) alması, modem üzerinde port yönlendirme (Port Forwarding) yapılamaması ve kurumsal ağlardaki CGNAT / güvenlik duvarı engelleri.
